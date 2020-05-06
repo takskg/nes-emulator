@@ -6,15 +6,13 @@
     "configurations": [
         {
             "name": "debug-nes-emulator",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/nes-emulator/target/debug/nes-emulator",
             "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "lldb"
+            "sourceLanguages": ["rust"],
+            "preLaunchTask": "cargo build",
+            "internalConsoleOptions": "openOnSessionStart",
         }
     ]
 }

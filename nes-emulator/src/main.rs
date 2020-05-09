@@ -6,6 +6,7 @@ extern crate log;
 
 mod nes;
 use nes::cassette::Cassette;
+use nes::nes_machine::NesMachine;
 
 fn logger_initialize() {
     //とりあえず全部出す
@@ -27,5 +28,23 @@ fn main() {
         info!("NESファイルの読み込みに成功！！");
     } else {
         info!("NESファイルの読み込みに失敗しました");
+    }
+
+    let mut machine: NesMachine = NesMachine::new();
+    machine.insert_cassette(cst);
+    if machine.boot() {
+        loop {
+            if machine.update() {
+                //ゲーム実行中...
+            } else {
+                //マシン終了
+                info!("ゲームを終了させます");
+                break;
+            }
+        }
+    } else {
+        error!(
+            "NESマシンの起動に失敗しました。.nesファイルが正しく読み込めてない可能性が高いです。"
+        );
     }
 }

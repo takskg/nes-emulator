@@ -1,6 +1,3 @@
-use std::fs::File;
-use std::io::prelude::*;
-
 #[macro_use]
 extern crate log;
 
@@ -19,12 +16,9 @@ fn main() {
     logger_initialize();
 
     //NESファイルからROMデータを読み込み
-    let mut file = File::open("rom/hello-world.nes").unwrap();
-    let mut buffer: Vec<u8> = Vec::new();
-    file.read_to_end(&mut buffer).unwrap();
-
+    let rom_file_path = "rom/hello-world.nes".to_string();
     let mut cst: Cassette = Default::default();
-    if cst.load_from_buffer(buffer) {
+    if cst.load_from_file(rom_file_path) {
         info!("NESファイルの読み込みに成功！！");
     } else {
         info!("NESファイルの読み込みに失敗しました");

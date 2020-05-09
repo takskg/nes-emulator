@@ -1,4 +1,6 @@
 ﻿use super::ines;
+use std::fs::File;
+use std::io::prelude::*;
 
 const INES_HEADER_SIZE: usize = 16; //カセットのヘッダーサイズ(byte)
 const PROM_MAX_SIZE: usize = 32768; //プログラムROMの最大サイズ(32KiB)
@@ -26,6 +28,14 @@ impl Default for Cassette {
 }
 
 impl Cassette {
+    /// ファイルからROMをロードする
+    pub fn load_from_file(&mut self, file_path: String) -> bool {
+        let mut file = File::open(file_path).unwrap();
+        let mut buffer: Vec<u8> = Vec::new();
+        file.read_to_end(&mut buffer).unwrap();
+        return self.load_from_buffer(buffer);
+    }
+    /// バッファからROMをロードする
     pub fn load_from_buffer(&mut self, buffer: Vec<u8>) -> bool {
         let mut result = false;
 
@@ -35,9 +45,9 @@ impl Cassette {
             let prom_byte = self.ines.prom_size as usize * PROM_BLOCK_SIZE;
             let crom_byte = self.ines.crom_size as usize * CROM_BLOCK_SIZE;
             let prom_start = INES_HEADER_SIZE;
-            let prom_end = prom_start + prom_byte - 1;
+            let prom_end = prom_start + prom_byte;
             let crom_start = prom_end;
-            let crom_end = crom_start + crom_byte - 1;
+            let crom_end = crom_start + crom_byte;
             //PROM
             self.prom[..prom_byte].copy_from_slice(&buffer[prom_start..prom_end]);
             //CROM

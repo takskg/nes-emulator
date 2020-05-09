@@ -35,9 +35,9 @@ impl Cassette {
             let prom_byte = self.ines.prom_size as usize * PROM_BLOCK_SIZE;
             let crom_byte = self.ines.crom_size as usize * CROM_BLOCK_SIZE;
             let prom_start = INES_HEADER_SIZE;
-            let prom_end = prom_start + prom_byte;
+            let prom_end = prom_start + prom_byte - 1;
             let crom_start = prom_end;
-            let crom_end = crom_start + crom_byte;
+            let crom_end = crom_start + crom_byte - 1;
             //PROM
             self.prom[..prom_byte].copy_from_slice(&buffer[prom_start..prom_end]);
             //CROM

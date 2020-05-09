@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::prelude::*;
 
 mod nes;
+use nes::cassette::Cassette;
 
 fn main() {
     //NESファイルからROMデータを読み込み
@@ -9,7 +10,7 @@ fn main() {
     let mut buffer: Vec<u8> = Vec::new();
     file.read_to_end(&mut buffer).unwrap();
 
-    let mut cst: nes::cassette::Cassette = Default::default();
+    let mut cst: Cassette = Default::default();
     if cst.load_from_buffer(buffer) {
         println!("NESファイルの読み込みに成功！！");
     }else{

@@ -1,7 +1,7 @@
 ﻿
 pub struct Ines {
-    prom_size: u8,
-    crom_size: u8,
+    pub prom_size: u8,
+    pub crom_size: u8,
     flag6: u8,
     flag7: u8,
     flag8: u8,
@@ -24,7 +24,7 @@ impl Default for Ines {
 }
 
 impl Ines {
-    pub fn load_ines(&mut self, buffer: Vec<u8>) -> bool {
+    pub fn load_ines(&mut self, buffer: &Vec<u8>) -> bool {
         let mut result = false;
 
         if buffer[0] == 0x4E && buffer[1] == 0x45 && buffer[2] == 0x53 && buffer[3] == 0x1A {//NES

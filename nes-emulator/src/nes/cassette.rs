@@ -1,9 +1,11 @@
 ﻿use super::ines;
 
 
-const INES_SIZE: usize = 16;//カセットのヘッダーサイズ(byte)
-const PROM_MAX_SIZE: usize = 128;//プログラムROMの最大サイズ(byte)
-const CROM_MAX_SIZE: usize = 128;//キャラクタROMの最大サイズ(byte)
+const INES_HEADER_SIZE: usize = 16;//カセットのヘッダーサイズ(byte)
+const PROM_MAX_SIZE: usize = 32768;//プログラムROMの最大サイズ(32KiB)
+const CROM_MAX_SIZE: usize = 8192;//キャラクタROMの最大サイズ(8KiB)
+const PROM_BLOCK_SIZE: usize = 16384;//プログラムROMのブロックサイズ(byte)
+const CROM_BLOCK_SIZE: usize = 8192;//キャラクタROMのブロックサイズ(byte)
 
 /*
 カセットの内容
@@ -30,8 +32,18 @@ impl Cassette {
         let mut result = false;
 
         //ヘッダーの読み込み
-        if self.ines.load_ines(buffer) {
+        if self.ines.load_ines(&buffer) {
             //PROM/CROMの読み込み
+            let prom_byte = self.ines.prom_size as usize * PROM_BLOCK_SIZE;
+            let crom_byte = self.ines.crom_size as usize * CROM_BLOCK_SIZE;
+            let prom_start = INES_HEADER_SIZE;
+            let prom_end = prom_start + prom_byte;
+            let crom_start = prom_end;
+            let crom_end = crom_start + crom_byte;
+            //PROM
+            self.prom[..prom_byte].copy_from_slice(&buffer[prom_start..prom_end]);
+            //CROM
+            self.crom[..crom_byte].copy_from_slice(&buffer[crom_start..crom_end]);
 
             result = true;
         }else{

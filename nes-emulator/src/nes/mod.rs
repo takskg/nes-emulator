@@ -1,4 +1,5 @@
 ﻿pub mod cassette;
+mod cpu;
 mod ines;
 pub mod nes_machine;
 

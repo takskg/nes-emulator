@@ -1,4 +1,5 @@
 ﻿use super::cassette;
+use super::cpu;
 
 /*
 NES実機の表現用
@@ -12,12 +13,14 @@ NES実機の表現用
 */
 pub struct NesMachine {
     cassette: cassette::Cassette, //実行するカセット
+    cpu: cpu::Cpu,                //CPU
 }
 
 impl NesMachine {
     pub fn new() -> NesMachine {
         NesMachine {
             cassette: Default::default(),
+            cpu: cpu::Cpu::new(),
         }
     }
 

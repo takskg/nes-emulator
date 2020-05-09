@@ -1,7 +1,5 @@
-#[macro_use]
-extern crate log;
-
 mod nes;
+use log::*;
 use nes::cassette::Cassette;
 use nes::nes_machine::NesMachine;
 

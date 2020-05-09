@@ -25,7 +25,7 @@ fn main() {
     let mut cst: Cassette = Default::default();
     if cst.load_from_buffer(buffer) {
         info!("NESファイルの読み込みに成功！！");
-    }else{
+    } else {
         info!("NESファイルの読み込みに失敗しました");
     }
 }

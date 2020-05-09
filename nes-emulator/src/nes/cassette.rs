@@ -1,11 +1,10 @@
 ﻿use super::ines;
 
-
-const INES_HEADER_SIZE: usize = 16;//カセットのヘッダーサイズ(byte)
-const PROM_MAX_SIZE: usize = 32768;//プログラムROMの最大サイズ(32KiB)
-const CROM_MAX_SIZE: usize = 8192;//キャラクタROMの最大サイズ(8KiB)
-const PROM_BLOCK_SIZE: usize = 16384;//プログラムROMのブロックサイズ(byte)
-const CROM_BLOCK_SIZE: usize = 8192;//キャラクタROMのブロックサイズ(byte)
+const INES_HEADER_SIZE: usize = 16; //カセットのヘッダーサイズ(byte)
+const PROM_MAX_SIZE: usize = 32768; //プログラムROMの最大サイズ(32KiB)
+const CROM_MAX_SIZE: usize = 8192; //キャラクタROMの最大サイズ(8KiB)
+const PROM_BLOCK_SIZE: usize = 16384; //プログラムROMのブロックサイズ(byte)
+const CROM_BLOCK_SIZE: usize = 8192; //キャラクタROMのブロックサイズ(byte)
 
 /*
 カセットの内容
@@ -26,7 +25,6 @@ impl Default for Cassette {
     }
 }
 
-
 impl Cassette {
     pub fn load_from_buffer(&mut self, buffer: Vec<u8>) -> bool {
         let mut result = false;
@@ -46,7 +44,7 @@ impl Cassette {
             self.crom[..crom_byte].copy_from_slice(&buffer[crom_start..crom_end]);
 
             result = true;
-        }else{
+        } else {
             //ヘッダーが不正
         }
 

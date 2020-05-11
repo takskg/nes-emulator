@@ -14,6 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: cd nes-emulator
+    - run: cargo --version
     - name: Build
       run: cargo build --verbose
     - name: Run tests

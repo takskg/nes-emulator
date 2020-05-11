@@ -1,5 +1,8 @@
-﻿use super::cassette;
-use super::cpu;
+﻿use super::cassette::Cassette;
+use super::cpu::Cpu;
+use super::ram::Ram;
+
+const WRAM_SIZE: usize = 1024 * 2; //WRAMのサイズ(2KiB)
 
 /*
 NES実機の表現用
@@ -11,37 +14,37 @@ NES実機の表現用
 4. 電源OFF
 5. 終了
 */
-pub struct NesMachine {
-    cassette: cassette::Cassette, //実行するカセット
-    cpu: cpu::Cpu,                //CPU
+pub struct NesMachine<'a> {
+    cassette: &'a Cassette, //実行するカセット
+    cpu: Cpu,               //CPU
+    wram: Ram,              //WRAM
 }
 
-impl NesMachine {
-    pub fn new() -> NesMachine {
+impl<'a> NesMachine<'a> {
+    pub fn new(insert_cassette: &'a Cassette) -> NesMachine<'a> {
         NesMachine {
-            cassette: Default::default(),
-            cpu: cpu::Cpu::new(),
+            cassette: insert_cassette,
+            cpu: Cpu::new(),
+            wram: Ram::new(WRAM_SIZE),
         }
-    }
-
-    /// 有効なカセットを挿入します。
-    /// 必ずBoot前に実行してください。
-    pub fn insert_cassette(&mut self, insert_cassette: cassette::Cassette) {
-        self.cassette = insert_cassette;
     }
 
     /// ブートします
     /// 必ずカセット挿入後に呼び出してください。
     /// ブートに成功したら、Updateを呼び続けてください。
-    pub fn boot(&self) -> bool {
+    pub fn boot(&mut self) -> bool {
         return true;
     }
+
+    /// リセット
+    /// リセットボタンが押された時の挙動をエミュレートします
+    pub fn reset(&mut self) {
+        self.cpu.reset();
+    }
+
     /// ゲームの更新を行う
-    /// Bootを呼び出した後に呼び続けてください
-    /// falseが返ってくるとシャットダウン処理が行われたので、
-    /// 速やかにUpdateを呼ぶのを停止してください。
-    pub fn update(&self) -> bool {
+    /// Bootを呼び出した後に呼び出してください
+    pub fn run(&mut self) {
         //今のところ出来ることがないので即終了
-        return false;
     }
 }

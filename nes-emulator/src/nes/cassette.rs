@@ -1,10 +1,9 @@
 ﻿use super::ines;
+use super::rom;
 use std::fs::File;
 use std::io::prelude::*;
 
 const INES_HEADER_SIZE: usize = 16; //カセットのヘッダーサイズ(byte)
-const PROM_MAX_SIZE: usize = 32768; //プログラムROMの最大サイズ(32KiB)
-const CROM_MAX_SIZE: usize = 8192; //キャラクタROMの最大サイズ(8KiB)
 const PROM_BLOCK_SIZE: usize = 16384; //プログラムROMのブロックサイズ(byte)
 const CROM_BLOCK_SIZE: usize = 8192; //キャラクタROMのブロックサイズ(byte)
 
@@ -13,16 +12,16 @@ const CROM_BLOCK_SIZE: usize = 8192; //キャラクタROMのブロックサイ�
 */
 pub struct Cassette {
     pub ines: ines::Ines,
-    pub prom: [u8; PROM_MAX_SIZE],
-    pub crom: [u8; CROM_MAX_SIZE],
+    pub prom: rom::Rom,
+    pub crom: rom::Rom,
 }
 
 impl Default for Cassette {
     fn default() -> Self {
         Self {
             ines: Default::default(),
-            prom: [0; PROM_MAX_SIZE],
-            crom: [0; CROM_MAX_SIZE],
+            prom: Default::default(),
+            crom: Default::default(),
         }
     }
 }
@@ -36,7 +35,7 @@ impl Cassette {
         return self.load_from_buffer(buffer);
     }
     /// バッファからROMをロードする
-    pub fn load_from_buffer(&mut self, buffer: Vec<u8>) -> bool {
+    fn load_from_buffer(&mut self, buffer: Vec<u8>) -> bool {
         let mut result = false;
 
         //ヘッダーの読み込み
@@ -49,9 +48,9 @@ impl Cassette {
             let crom_start = prom_end;
             let crom_end = crom_start + crom_byte;
             //PROM
-            self.prom[..prom_byte].copy_from_slice(&buffer[prom_start..prom_end]);
+            self.prom = rom::Rom::new(prom_byte, &buffer[prom_start..prom_end]);
             //CROM
-            self.crom[..crom_byte].copy_from_slice(&buffer[crom_start..crom_end]);
+            self.crom = rom::Rom::new(crom_byte, &buffer[crom_start..crom_end]);
 
             result = true;
         } else {

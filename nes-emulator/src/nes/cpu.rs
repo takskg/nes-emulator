@@ -55,4 +55,9 @@ impl Cpu {
             register: Default::default(),
         }
     }
+
+    /// リセット
+    pub fn reset(&mut self) {
+        //今のところすることなし
+    }
 }

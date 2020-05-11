@@ -22,18 +22,12 @@ fn main() {
         info!("NESファイルの読み込みに失敗しました");
     }
 
-    let mut machine: NesMachine = NesMachine::new();
-    machine.insert_cassette(cst);
+    let mut machine: NesMachine = NesMachine::new(&cst);
+    machine.reset();
     if machine.boot() {
-        loop {
-            if machine.update() {
-                //ゲーム実行中...
-            } else {
-                //マシン終了
-                info!("ゲームを終了させます");
-                break;
-            }
-        }
+        debug!("ゲーム実行開始");
+        machine.run();
+        debug!("ゲーム終了");
     } else {
         error!(
             "NESマシンの起動に失敗しました。.nesファイルが正しく読み込めてない可能性が高いです。"
